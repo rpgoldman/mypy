@@ -1444,3 +1444,29 @@ class Foo:
 [out]
 ==
 a.py:3: error: Argument 1 to "foo" of "Foo" has incompatible type "int"; expected "str"
+
+[case testDeletePackageInitFile]
+# cmd: mypy p/__init__.py p/a.py
+[file p/__init__.py]
+[file p/a.py]
+[delete p/__init__.py.2]
+[out]
+==
+mypy: can't find module 'p'
+
+[case testAddPackageWithoutInitFile]
+import p.a
+p.a.f(1)
+[file p/a.py.2]
+def f(x: str) -> None: pass
+[file p/__init__.py.3]
+[out]
+main:1: error: Cannot find module named 'p'
+main:1: note: (Perhaps setting MYPYPATH or using the "--ignore-missing-imports" flag would help)
+main:1: error: Cannot find module named 'p.a'
+==
+main:1: error: Cannot find module named 'p'
+main:1: note: (Perhaps setting MYPYPATH or using the "--ignore-missing-imports" flag would help)
+main:1: error: Cannot find module named 'p.a'
+==
+main:2: error: Argument 1 to "f" has incompatible type "int"; expected "str"

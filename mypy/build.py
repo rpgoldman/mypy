@@ -1067,6 +1067,7 @@ def validate_meta(meta: Optional[CacheMeta], id: str, path: Optional[str],
     try:
         st = manager.get_stat(path)
     except OSError:
+        manager.log('Cannot access metadata for {} ({})'.format(id, path))
         return None
     if not stat.S_ISREG(st.st_mode):
         manager.log('Metadata abandoned for {}: file {} does not exist'.format(id, path))
