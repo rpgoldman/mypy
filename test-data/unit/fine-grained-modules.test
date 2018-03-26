@@ -1452,7 +1452,7 @@ a.py:3: error: Argument 1 to "foo" of "Foo" has incompatible type "int"; expecte
 [delete p/__init__.py.2]
 [out]
 ==
-mypy: can't find module 'p'
+mypy: Cannot find module named 'p'
 
 [case testAddPackageWithoutInitFile]
 import p.a

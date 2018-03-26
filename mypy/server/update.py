@@ -198,10 +198,12 @@ class FineGrainedBuildManager:
 
         Args:
             changed_modules: Modules changed since the previous update/build; each is
-                a (module id, path) tuple. Includes modified and added modules.
-                Assume this is correct; it's not validated here.
-            removed_modules: Modules that have been deleted since the previous update
-                or removed from the build.
+                a (module id, path) tuple. Includes modified and added modules, and it may
+                contain also deleted modules. Assume this is correct; it's not validated
+                here.
+            removed_modules: Additional modules that have been deleted since the previous
+                update or removed from the build (if including in changed_modules would be
+                ambiguous).
 
         Returns:
             A list of errors.
@@ -221,8 +223,13 @@ class FineGrainedBuildManager:
         self.updated_modules = []
         changed_modules = dedupe_modules(changed_modules + self.stale)
         initial_set = {id for id, _ in changed_modules}
-        self.manager.log_fine_grained('==== update %s ====' % ', '.join(
-            repr(id) for id, _ in changed_modules))
+        removed_msg = ''
+        if removed_modules:
+            removed_msg = ' (removed %d)' % ', '.join(
+                repr(id) for id, _ in removed_modules)
+        self.manager.log_fine_grained('==== update %s%s ====' % (
+            ', '.join(repr(id) for id, _ in changed_modules),
+            removed_msg))
         if self.previous_targets_with_errors and is_verbose(self.manager):
             self.manager.log_fine_grained('previous targets with errors: %s' %
                              sorted(self.previous_targets_with_errors))

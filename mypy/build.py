@@ -60,7 +60,7 @@ from mypy.fscache import FileSystemCache, FileSystemMetaCache
 # mode only that is useful during development. This produces only a subset of
 # output compared to --verbose output. We use a global flag to enable this so
 # that it's easy to enable this when running tests.
-DEBUG_FINE_GRAINED = False
+DEBUG_FINE_GRAINED = True # False
 
 
 PYTHON_EXTENSIONS = ['.pyi', '.py']
@@ -718,6 +718,7 @@ class BuildManager:
         return tree
 
     def module_not_found(self, path: str, source: str, line: int, target: str) -> None:
+        print('!!!')
         self.errors.set_file(path, source)
         stub_msg = "(Stub files are from https://github.com/python/typeshed)"
         if target == 'builtins':
@@ -1496,6 +1497,7 @@ class State:
                  ancestor_for: 'Optional[State]' = None,
                  root_source: bool = False,
                  ) -> None:
+        print('create State', id)
         assert id or path or source is not None, "Neither id, path nor source given"
         self.manager = manager
         State.order_counter += 1
@@ -1552,6 +1554,7 @@ class State:
                         manager.missing_modules.add(id)
                         raise ModuleNotFound
             else:
+                print([1])
                 # Could not find a module.  Typically the reason is a
                 # misspelled module name, missing stub, module not in
                 # search path or the module has not been installed.
@@ -1568,7 +1571,7 @@ class State:
                     # If we can't find a root source it's always fatal.
                     # TODO: This might hide non-fatal errors from
                     # root sources processed earlier.
-                    raise CompileError(["mypy: can't find module '%s'" % id])
+                    raise CompileError(["mypy: Cannot find module named '%s'" % id])
         self.path = path
         self.xpath = path or '<string>'
         self.source = source

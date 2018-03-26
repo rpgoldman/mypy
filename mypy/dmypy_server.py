@@ -327,11 +327,15 @@ class Server:
     def find_changed(self, sources: List[mypy.build.BuildSource]) -> Tuple[List[Tuple[str, str]],
                                                                            List[Tuple[str, str]]]:
         changed_paths = self.fswatcher.find_changed()
+        print('changed_paths', changed_paths)
         changed = [(source.module, source.path)
                    for source in sources
                    if source.path in changed_paths]
+        print('changed', changed)
         modules = {source.module for source in sources}
+        print('modules', modules)
         omitted = [source for source in self.previous_sources if source.module not in modules]
+        print('omitted', omitted)
         removed = []
         for source in omitted:
             path = source.path
