@@ -2490,6 +2490,7 @@ class SymbolTableNode:
                  'implicit',
                  'is_aliasing',
                  'alias_name',
+                 'no_serialize'
                  )
 
     # TODO: This is a mess. Refactor!
@@ -2503,7 +2504,9 @@ class SymbolTableNode:
                  normalized: bool = False,
                  alias_tvars: Optional[List[str]] = None,
                  implicit: bool = False,
-                 module_hidden: bool = False) -> None:
+                 module_hidden: bool = False,
+                 *,
+                 no_serialize: bool = False) -> None:
         self.kind = kind
         self.node = node
         self.type_override = typ
@@ -2515,6 +2518,7 @@ class SymbolTableNode:
         self.cross_ref = None  # type: Optional[str]
         self.is_aliasing = False
         self.alias_name = None  # type: Optional[str]
+        self.no_serialize = no_serialize
 
     @property
     def fullname(self) -> Optional[str]:
@@ -2650,7 +2654,7 @@ class SymbolTable(Dict[str, SymbolTableNode]):
             # module that gets added to every module by
             # SemanticAnalyzerPass2.visit_file(), but it shouldn't be
             # accessed by users of the module.
-            if key == '__builtins__':
+            if key == '__builtins__' or value.no_serialize:
                 continue
             data[key] = value.serialize(fullname, key)
         return data
