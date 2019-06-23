@@ -72,6 +72,7 @@ the setup.py might look like
         version="0.1",
         package_data={"package_a": ["py.typed"]},
         packages=["package_a"]
+        zip_safe=False
     )
 
 .. note::
@@ -103,6 +104,7 @@ the setup.py might look like:
         version="0.1",
         package_data={"package_b": ["py.typed", "lib.pyi"]},
         packages=["package_b"]
+        zip_safe=False
     )
 
 In this example, both ``lib.py`` and ``lib.pyi`` exist. At runtime, the Python
@@ -132,4 +134,5 @@ the setup.py might look like:
         version="0.1",
         package_data={"package_c-stubs": ["__init__.pyi", "lib.pyi"]},
         packages=["package_c-stubs"]
+        zip_safe=False
     )
